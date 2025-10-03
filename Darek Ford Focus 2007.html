@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vánoční dárek</title>
+  <style>
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg,#001,#123);
+      font-family:sans-serif;
+    }
+    .gift-container{
+      position:relative;
+      width:200px;
+      height:200px;
+      cursor:pointer;
+      perspective:1000px;
+    }
+    .box{
+      position:absolute;
+      bottom:0;
+      width:100%;
+      height:150px;
+      background:#c62828;
+      border:5px solid #8b0000;
+      box-sizing:border-box;
+      border-radius:6px;
+    }
+    .lid{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:60px;
+      background:#b71c1c;
+      border:5px solid #7a0000;
+      border-radius:6px;
+      transform-origin:bottom center;
+      transition:transform 0.8s ease;
+      z-index:2;
+    }
+    .gift-container.open .lid{
+      transform:rotateX(100deg) translateY(-20px) translateZ(-20px);
+    }
+    .ribbon-vert{
+      position:absolute;
+      top:0;
+      left:50%;
+      width:30px;
+      height:100%;
+      background:#ffd166;
+      transform:translateX(-50%);
+      z-index:1;
+    }
+    .ribbon-horiz{
+      position:absolute;
+      top:50%;
+      left:0;
+      width:100%;
+      height:30px;
+      background:#ffd166;
+      transform:translateY(-50%);
+      z-index:1;
+    }
+    .surprise{
+      position:absolute;
+      bottom:0;
+      left:50%;
+      transform:translateX(-50%) translateY(100%);
+      width:120px;
+      height:120px;
+      background:url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Crystal_Project_present.png/240px-Crystal_Project_present.png') no-repeat center/contain;
+      transition:transform 0.8s ease;
+      z-index:0;
+    }
+    .gift-container.open .surprise{
+      transform:translateX(-50%) translateY(-120%);
+    }
+  </style>
+</head>
+<body>
+  <div class="gift-container" id="gift">
+    <div class="lid"></div>
+    <div class="box"></div>
+    <div class="ribbon-vert"></div>
+    <div class="ribbon-horiz"></div>
+    <div class="surprise"></div>
+  </div>
+
+  <script>
+    const gift = document.getElementById('gift');
+    gift.addEventListener('click',()=>{
+      gift.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
