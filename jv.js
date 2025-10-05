@@ -9,6 +9,8 @@ https://codepen.io/chuongdang/pen/yzpDG
 - moon 
 https://codepen.io/agelber/pen/sjIKp
 */
+alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
+
 window.requestAnimFrame = ( function() {
 	return window.requestAnimationFrame ||
 				window.webkitRequestAnimationFrame ||
@@ -316,6 +318,7 @@ function reveal() {
         ifrm.style.border = 'none';
         document.querySelector('#video').appendChild(ifrm);
 }
+
 
 
 
