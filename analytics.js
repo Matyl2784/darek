@@ -20,7 +20,7 @@ const db = getFirestore(app);
 const startTime = Date.now();
 const visitId = `${startTime}-${Math.floor(Math.random() * 99999)}`;
 
-// 🧠 Získání základních informací o uživateli
+// 🧠 Info o prohlížeči a OS
 const getBrowserInfo = () => {
   const ua = navigator.userAgent;
   let browser = "Unknown";
@@ -39,36 +39,49 @@ const getBrowserInfo = () => {
   return { browser, os };
 };
 
-// 📊 Základní data
+// 📊 Strukturovaná data návštěvy
 const visitData = {
-  url: window.location.href,
-  referrer: document.referrer || "direct",
-  startTime,
-  endTime: null,
-  timeSpent: 0,
-  browser: getBrowserInfo().browser,
-  os: getBrowserInfo().os,
-  device: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
-  screen: `${screen.width}x${screen.height}`,
-  language: navigator.language,
-  boxOpened: false,
-  boxOpenTime: null,
-  updates: []
+  info: {
+    url: window.location.href,
+    referrer: document.referrer || "direct",
+    browser: getBrowserInfo().browser,
+    os: getBrowserInfo().os,
+    device: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
+    screen: `${screen.width}x${screen.height}`,
+    language: navigator.language,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+  },
+  session: {
+    startTime,
+    endTime: null,
+    timeSpent: 0,
+    boxOpened: false,
+    boxOpenTime: null,
+    lastUpdate: startTime
+  },
+  log: [
+    {
+      timestamp: startTime,
+      action: "session_start"
+    }
+  ]
 };
 
-// 💾 Uložení první verze do Firestore
+// 💾 Uložení první verze
 const visitRef = doc(collection(db, "visits"), visitId);
 await setDoc(visitRef, visitData);
 
-// ⏱️ Pravidelné updaty (každých 10 s)
+// ⏱️ Pravidelné aktualizace (každých 10 sekund)
 const interval = setInterval(async () => {
   const now = Date.now();
   const timeSpent = Math.round((now - startTime) / 1000);
   try {
     await updateDoc(visitRef, {
-      timeSpent,
-      updates: arrayUnion({
+      "session.timeSpent": timeSpent,
+      "session.lastUpdate": now,
+      log: arrayUnion({
         timestamp: now,
+        action: "heartbeat",
         timeSpent
       })
     });
@@ -77,36 +90,39 @@ const interval = setInterval(async () => {
   }
 }, 10000);
 
-// 🎁 Sledování otevření boxu
+// 🎁 Událost otevření boxu
 window.addEventListener("openbox", async () => {
   const now = Date.now();
-  visitData.boxOpened = true;
-  visitData.boxOpenTime = now;
-
   try {
     await updateDoc(visitRef, {
-      boxOpened: true,
-      boxOpenTime: now,
-      updates: arrayUnion({
+      "session.boxOpened": true,
+      "session.boxOpenTime": now,
+      log: arrayUnion({
         timestamp: now,
         action: "box_opened"
       })
     });
-    console.log("📦 Box opening zaznamenán!");
+    console.log("📦 Událost 'box_opened' zapsána.");
   } catch (e) {
-    console.error("❌ Error logging box open:", e);
+    console.error("❌ Chyba při zápisu 'box_opened':", e);
   }
 });
 
-// 🚪 Když uživatel odchází
+// 🚪 Odchod uživatele
 window.addEventListener("beforeunload", async () => {
   clearInterval(interval);
   const endTime = Date.now();
   const total = Math.round((endTime - startTime) / 1000);
+
   try {
     await updateDoc(visitRef, {
-      endTime,
-      timeSpent: total
+      "session.endTime": endTime,
+      "session.timeSpent": total,
+      log: arrayUnion({
+        timestamp: endTime,
+        action: "session_end",
+        totalTime: total
+      })
     });
   } catch (e) {
     console.error("Unload update failed:", e);
