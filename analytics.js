@@ -51,18 +51,12 @@ const visitData = {
   device: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
   screen: `${screen.width}x${screen.height}`,
   language: navigator.language,
-  clickCount: 0,
-  lastInteraction: startTime,
+  boxOpened: false,
+  boxOpenTime: null,
   updates: []
 };
 
-// 🖱️ Sledování interakcí
-document.addEventListener("click", () => {
-  visitData.clickCount++;
-  visitData.lastInteraction = Date.now();
-});
-
-// 💾 Uložení první verze
+// 💾 Uložení první verze do Firestore
 const visitRef = doc(collection(db, "visits"), visitId);
 await setDoc(visitRef, visitData);
 
@@ -73,7 +67,6 @@ const interval = setInterval(async () => {
   try {
     await updateDoc(visitRef, {
       timeSpent,
-      lastInteraction: visitData.lastInteraction,
       updates: arrayUnion({
         timestamp: now,
         timeSpent
@@ -84,6 +77,27 @@ const interval = setInterval(async () => {
   }
 }, 10000);
 
+// 🎁 Sledování otevření boxu
+window.addEventListener("openbox", async () => {
+  const now = Date.now();
+  visitData.boxOpened = true;
+  visitData.boxOpenTime = now;
+
+  try {
+    await updateDoc(visitRef, {
+      boxOpened: true,
+      boxOpenTime: now,
+      updates: arrayUnion({
+        timestamp: now,
+        action: "box_opened"
+      })
+    });
+    console.log("📦 Box opening zaznamenán!");
+  } catch (e) {
+    console.error("❌ Error logging box open:", e);
+  }
+});
+
 // 🚪 Když uživatel odchází
 window.addEventListener("beforeunload", async () => {
   clearInterval(interval);
@@ -92,8 +106,7 @@ window.addEventListener("beforeunload", async () => {
   try {
     await updateDoc(visitRef, {
       endTime,
-      timeSpent: total,
-      lastInteraction: visitData.lastInteraction
+      timeSpent: total
     });
   } catch (e) {
     console.error("Unload update failed:", e);
