@@ -9,51 +9,6 @@ https://codepen.io/chuongdang/pen/yzpDG
 - moon 
 https://codepen.io/agelber/pen/sjIKp
 */
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCMifD1WL04-WNN2euciK2epNCUP5qNFpA",
-  authDomain: "web-analytics-f6777.firebaseapp.com",
-  projectId: "web-analytics-f6777",
-  storageBucket: "web-analytics-f6777.firebasestorage.app",
-  messagingSenderId: "507005327319",
-  appId: "1:507005327319:web:cb513fdd8efe135842dd92"
-};
-
-
-function initFirebase() {
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    let visitRef = db.collection("visits").doc();
-    const startTime = Date.now();
-    visitRef.set({
-        url: window.location.href,
-        startTime: startTime,
-        lastUpdate: Date.now(),
-        timeSpent: 0
-    });
-    const intervalId = setInterval(() => {
-        const currentTime = Date.now();
-        const secondsSpent = Math.round((currentTime - startTime) / 1000);
-        visitRef.update({
-            lastUpdate: currentTime,
-            timeSpent: secondsSpent
-        }).catch(err => console.error(err));
-    }, 5000);
-    window.addEventListener('beforeunload', () => {
-        clearInterval(intervalId);
-        const endTime = Date.now();
-        const secondsSpent = Math.round((endTime - startTime)/1000);
-        visitRef.update({
-            lastUpdate: endTime,
-            timeSpent: secondsSpent
-        });
-    });
-}
-
-initFirebase();
-
-
 alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
 
 
