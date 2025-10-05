@@ -354,7 +354,6 @@ function reveal() {
 		ifrm.setAttribute("allow", "autoplay");
         document.querySelector('#video').appendChild(ifrm);
 }
-initFirebase()
 
 
 
