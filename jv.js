@@ -21,14 +21,46 @@ const firebaseConfig = {
 };
 
 
+// Inicializace Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// test, že to funguje
-db.collection("visits").add({test: "funguje"})
-  .then(() => console.log("Firestore OK"))
-  .catch((e) => console.error("Chyba Firestore:", e));
+// uložíme čas načtení
+const startTime = Date.now();
 
+// vytvoříme dokument pro tuto návštěvu
+let visitRef = db.collection("visits").doc(); // Firestore automaticky vytvoří unikátní ID
+
+// první zápis při načtení
+visitRef.set({
+    url: window.location.href,
+    startTime: startTime,
+    lastUpdate: Date.now(),
+    timeSpent: 0
+});
+
+// každých 5 sekund aktualizujeme timeSpent
+const intervalId = setInterval(() => {
+    const currentTime = Date.now();
+    const secondsSpent = Math.round((currentTime - startTime) / 1000);
+
+    visitRef.update({
+        lastUpdate: currentTime,
+        timeSpent: secondsSpent
+    }).catch(err => console.error("Chyba při aktualizaci:", err));
+}, 5000);
+
+// volitelně, při odchodu z okna - finální update
+window.addEventListener('beforeunload', function () {
+    clearInterval(intervalId); // zastav interval
+    const endTime = Date.now();
+    const secondsSpent = Math.round((endTime - startTime) / 1000);
+
+    visitRef.update({
+        lastUpdate: endTime,
+        timeSpent: secondsSpent
+    });
+});
 
 alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
 
