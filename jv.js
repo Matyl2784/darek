@@ -52,7 +52,7 @@ function initFirebase() {
 }
 
 
-alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
+//alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
 
 
 // now we will setup our basic variables for the demo
