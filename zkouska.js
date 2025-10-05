@@ -1,7 +1,7 @@
 const audio = new Audio('song_bost.wav');
 audio.crossOrigin = "anonymous";
 audio.loop = true;
-audio.volume = 0.8;
+audio.volume = 1.0;
 
 const context = new (window.AudioContext || window.webkitAudioContext)();
 const src = context.createMediaElementSource(audio);
@@ -20,15 +20,15 @@ function animate() {
   requestAnimationFrame(animate);
   analyser.getByteFrequencyData(dataArray);
 
-  // spočítáme průměrnou energii v nižších frekvencích (basy)
+  // zaměříme se na basy (nižší frekvence)
   const bassRange = dataArray.slice(0, 32);
   const average = bassRange.reduce((a, b) => a + b, 0) / bassRange.length;
 
-  // detekce "dropu" – prudký nárůst energie
   const diff = average - lastEnergy;
-  lastEnergy = average * 0.9 + lastEnergy * 0.1; // trochu vyhlazení
+  lastEnergy = average * 0.8 + lastEnergy * 0.2; // vyhlazení
 
-  if (diff > 30 && average > 80) {
+  if (diff > 25 && average > 80) {
+    // při silném beatu -> náhodná barva a bliknutí
     document.body.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
     document.body.style.filter = `brightness(2)`;
   } else {
@@ -37,6 +37,9 @@ function animate() {
 }
 
 document.body.addEventListener('click', () => {
+  const overlay = document.getElementById('overlay');
+  overlay.classList.add('hidden');
+
   context.resume().then(() => {
     audio.play();
     animate();
