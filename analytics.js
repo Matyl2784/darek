@@ -70,14 +70,7 @@ const visitData = {
     boxOpenReadable: null,
     lastUpdate: startTime,
     lastReadable: formatTime(startTime)
-  },
-  log: [
-    {
-      timestamp: startTime,
-      timeReadable: formatTime(startTime),
-      action: "session_start"
-    }
-  ]
+  }
 };
 
 // 💾 Uložení první verze
