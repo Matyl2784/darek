@@ -364,21 +364,6 @@ function reveal() {
 }
 
 
-// když uživatel opouští stránku
-window.addEventListener('beforeunload', function () {
-    const endTime = Date.now();
-    const timeSpent = Math.round((endTime - startTime) / 1000); // v sekundách
-
-    db.collection("visits").add({
-        time: timeSpent,
-        url: window.location.href,
-        timestamp: Date.now()
-    }).then(() => {
-        console.log("Data odeslána na Firestore");
-    }).catch((error) => {
-        console.error("Chyba při odesílání:", error);
-    });
-});
 
 
 
