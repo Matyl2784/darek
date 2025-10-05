@@ -54,7 +54,6 @@ function initFirebase() {
 
 alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
 
-initFirebase()
 
 // now we will setup our basic variables for the demo
 var canvas = document.getElementById( 'canvas' ),
@@ -355,6 +354,7 @@ function reveal() {
 		ifrm.setAttribute("allow", "autoplay");
         document.querySelector('#video').appendChild(ifrm);
 }
+initFirebase()
 
 
 
