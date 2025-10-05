@@ -15,8 +15,54 @@
 <body>
   <audio id="music" src="song_bost.wav"></audio>
 
-  <script scr="zkouska.js">
+  <script>
+    const audio = new Audio('song_bost.wav');
+audio.crossOrigin = "anonymous";
+audio.loop = true;
+audio.volume = 0.8;
+
+const context = new (window.AudioContext || window.webkitAudioContext)();
+const src = context.createMediaElementSource(audio);
+const analyser = context.createAnalyser();
+
+src.connect(analyser);
+analyser.connect(context.destination);
+
+analyser.fftSize = 256;
+const bufferLength = analyser.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
+
+let lastEnergy = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  analyser.getByteFrequencyData(dataArray);
+
+  // spočítáme průměrnou energii v nižších frekvencích (basy)
+  const bassRange = dataArray.slice(0, 32);
+  const average = bassRange.reduce((a, b) => a + b, 0) / bassRange.length;
+
+  // detekce "dropu" – prudký nárůst energie
+  const diff = average - lastEnergy;
+  lastEnergy = average * 0.9 + lastEnergy * 0.1; // trochu vyhlazení
+
+  if (diff > 30 && average > 80) {
+    document.body.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+    document.body.style.filter = `brightness(2)`;
+  } else {
+    document.body.style.filter = `brightness(1)`;
+  }
+}
+
+document.body.addEventListener('click', () => {
+  context.resume().then(() => {
+    audio.play();
+    animate();
+  });
+});
+
   </script>
 </body>
 </html>
+
 
