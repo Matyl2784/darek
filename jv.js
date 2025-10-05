@@ -84,7 +84,7 @@ function Firework( sx, sy, tx, ty ) {
 	this.angle = Math.atan2( ty - sy, tx - sx );
 	this.speed = 2;
 	this.acceleration = 1.05;
-	this.brightness = random( 60, 90 );
+	this.brightness = random( 600, 9000 );
 	// circle target indicator radius
 	this.targetRadius = 1;
 }
@@ -197,7 +197,7 @@ Particle.prototype.draw = function() {
 // create particle group/explosion
 function createParticles( x, y ) {
 	// increase the particle count for a bigger explosion, beware of the canvas performance hit with the increased particles though
-	var particleCount = 200;
+	var particleCount = 1000;
 	while( particleCount-- ) {
 		particles.push( new Particle( x, y ) );
 	}
@@ -264,6 +264,7 @@ window.onload=function(){
   var box=merrywrap.getElementsByClassName("giftbox")[0];
   var step=1;
   var stepMinutes=[2000,2000,1000,1000];
+  const audio = document.getElementById("song");
   function init(){
           box.addEventListener("click",openBox,false);
   }
@@ -274,8 +275,13 @@ window.onload=function(){
   function openBox(){
     if(step===1){
       box.removeEventListener("click",openBox,false); 
-    }  
+
+    }
+
     stepClass(step); 
+	document.body.addEventListener("click", () => {
+    	audio.play();
+  }, { once: true });
     if(step===3){ 
     } 
     if(step===4){
@@ -304,7 +310,7 @@ function reveal() {
   }
   
   var ifrm = document.createElement("iframe");
-        ifrm.setAttribute("src", "https://www.youtube.com/embed/LjhCEhWiKXk?controls=0&loop=1&autoplay=1");
+        ifrm.setAttribute("src", "https://www.youtube.com/watch?v=4XYZi5HyI58&list=LL");
         //ifrm.style.width = `${w}px`;
         //ifrm.style.height = `${h}px`;
         ifrm.style.border = 'none';
