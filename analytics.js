@@ -85,13 +85,7 @@ const interval = setInterval(async () => {
     await updateDoc(visitRef, {
       "session.timeSpent": timeSpent,
       "session.lastUpdate": now,
-      "session.lastReadable": formatTime(now),
-      log: arrayUnion({
-        timestamp: now,
-        timeReadable: formatTime(now),
-        action: "heartbeat",
-        timeSpent
-      })
+      "session.lastReadable": formatTime(now)
     });
   } catch (e) {
     console.error("Error updating Firestore:", e);
