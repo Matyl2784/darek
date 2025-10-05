@@ -11,6 +11,13 @@ https://codepen.io/agelber/pen/sjIKp
 */
 alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
 
+// Inicializace Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// uložíme čas načtení
+const startTime = Date.now();
+
 window.requestAnimFrame = ( function() {
 	return window.requestAnimationFrame ||
 				window.webkitRequestAnimationFrame ||
@@ -318,6 +325,24 @@ function reveal() {
         ifrm.style.border = 'none';
         document.querySelector('#video').appendChild(ifrm);
 }
+
+
+// když uživatel opouští stránku
+window.addEventListener('beforeunload', function () {
+    const endTime = Date.now();
+    const timeSpent = Math.round((endTime - startTime) / 1000); // v sekundách
+
+    db.collection("visits").add({
+        time: timeSpent,
+        url: window.location.href,
+        timestamp: Date.now()
+    }).then(() => {
+        console.log("Data odeslána na Firestore");
+    }).catch((error) => {
+        console.error("Chyba při odesílání:", error);
+    });
+});
+
 
 
 
