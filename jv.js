@@ -11,6 +11,16 @@ https://codepen.io/agelber/pen/sjIKp
 */
 alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
 
+const firebaseConfig = {
+  apiKey: "AIzaSyCMifD1WL04-WNN2euciK2epNCUP5qNFpA",
+  authDomain: "web-analytics-f6777.firebaseapp.com",
+  projectId: "web-analytics-f6777",
+  storageBucket: "web-analytics-f6777.firebasestorage.app",
+  messagingSenderId: "507005327319",
+  appId: "1:507005327319:web:cb513fdd8efe135842dd92"
+};
+
+
 // Inicializace Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -342,6 +352,7 @@ window.addEventListener('beforeunload', function () {
         console.error("Chyba při odesílání:", error);
     });
 });
+
 
 
 
