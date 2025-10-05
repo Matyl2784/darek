@@ -27,7 +27,7 @@ function animate() {
   const diff = average - lastEnergy;
   lastEnergy = average * 0.8 + lastEnergy * 0.2; // vyhlazení
 
-  if (diff > 25 && average > 80) {
+  if (diff > 5 && average > 40) {
     // při silném beatu -> náhodná barva a bliknutí
     document.body.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
     document.body.style.filter = `brightness(2)`;
