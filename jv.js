@@ -278,15 +278,11 @@ window.onload=function(){
   function openBox(){
     if(step===1){
       box.removeEventListener("click",openBox,false); 
-		  // Pošli událost o otevření boxu
-  document.dispatchEvent(new CustomEvent("boxOpened", {
-    detail: {
-      time: new Date().toISOString(),
-      step: step
     }
-  }));
 
-    }
+	
+  // 💥 TADY přidej:
+  window.dispatchEvent(new Event("openbox"));
 
     stepClass(step); 
 	document.body.addEventListener("click", () => {
