@@ -310,12 +310,13 @@ function reveal() {
   }
   
   var ifrm = document.createElement("iframe");
-        ifrm.setAttribute("src", "https://www.youtube.com/embed/v-I95YG4gMI"allow="autoplay);
+        ifrm.setAttribute("src", "https://www.youtube.com/embed/v-I95YG4gMI?autoplay=1&controls=0");
         ifrm.style.width = `${w}px`;
         ifrm.style.height = `${h}px`;
         ifrm.style.border = 'none';
         document.querySelector('#video').appendChild(ifrm);
 }
+
 
 
 
