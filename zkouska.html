@@ -16,7 +16,8 @@
   <audio id="music" src="song_bost.wav"></audio>
 
   <script>
-    const audio = new Audio('song_bost.wav');
+    async function start() {
+const audio = new Audio('song_bost.wav');
 audio.crossOrigin = "anonymous";
 audio.loop = true;
 audio.volume = 0.8;
@@ -60,9 +61,11 @@ document.body.addEventListener('click', () => {
     animate();
   });
 });
+    }
 
   </script>
 </body>
 </html>
+
 
 
