@@ -360,6 +360,7 @@ function reveal() {
         ifrm.style.width = `${w}px`;
         ifrm.style.height = `${h}px`;
         ifrm.style.border = 'none';
+		ifrm.setAttribute("allow", "autoplay");
         document.querySelector('#video').appendChild(ifrm);
 }
 
