@@ -9,7 +9,7 @@ https://codepen.io/chuongdang/pen/yzpDG
 - moon 
 https://codepen.io/agelber/pen/sjIKp
 */
-alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCMifD1WL04-WNN2euciK2epNCUP5qNFpA",
@@ -21,21 +21,16 @@ const firebaseConfig = {
 };
 
 
-// Inicializace Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// uložíme čas načtení
-const startTime = Date.now();
+// test, že to funguje
+db.collection("visits").add({test: "funguje"})
+  .then(() => console.log("Firestore OK"))
+  .catch((e) => console.error("Chyba Firestore:", e));
 
-window.requestAnimFrame = ( function() {
-	return window.requestAnimationFrame ||
-				window.webkitRequestAnimationFrame ||
-				window.mozRequestAnimationFrame ||
-				function( callback ) {
-					window.setTimeout( callback, 1000 / 60 );
-				};
-})();
+
+alert("Aloha starouši, pro pokračování se ujisti že máš zapnutý zvuk, díky!");
 
 // now we will setup our basic variables for the demo
 var canvas = document.getElementById( 'canvas' ),
